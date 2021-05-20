@@ -41,6 +41,7 @@ export default {
     }
 
     .packageName {
+      margin: 0.2rem 0 0;
       @include smallText;
     }
 
@@ -78,6 +79,7 @@ export default {
   .counterDays {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     @include smallText;
     font-weight: normal;
     font-size: 0.688rem;

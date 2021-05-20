@@ -1,5 +1,5 @@
 <template>
-  <section :class="$style.container">
+  <router-link :class="$style.container" to="/order" exact>
     <ProgressBar />
     <div :class="$style.nearestDelivery">
       <div :class="$style.date">
@@ -13,11 +13,11 @@
         <span :class="$style.place">Работа на объекте в Басма...</span>
       </div>
     </div>
-  </section>
+  </router-link>
 </template>
 
 <script>
-import ProgressBar from "@/components/basic/ProgressBar";
+import ProgressBar from "@/components/common/ProgressBar";
 
 export default {
   components: {
@@ -31,6 +31,7 @@ export default {
 @import "@/assets/styles/fonts";
 
 .container {
+  display: block;
   width: 100%;
   min-height: 15.5rem;
   margin: 0.625rem 0 0;

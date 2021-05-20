@@ -9,7 +9,12 @@ export default new VueRouter({
     {
       path: "/",
       name: "orders",
-      component: () => import("../views/ordersList.vue"),
+      component: () => import("../pages/ordersList.vue"),
+    },
+    {
+      path: "/order",
+      name: "order",
+      component: () => import("../pages/orderView.vue"),
     },
   ],
 });

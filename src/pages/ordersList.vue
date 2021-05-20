@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import OrderCard from "@/components/common/OrderCard";
+import OrderCard from "@/components/order/OrderCard";
 
 export default {
   components: {
