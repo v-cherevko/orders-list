@@ -1,0 +1,13 @@
+@import "./colors.scss";
+@import "./fonts.scss";
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+html {
+  font-family: "Roboto", sans-serif;
+}
