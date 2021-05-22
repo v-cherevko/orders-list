@@ -1,27 +1,102 @@
 <template>
-  <router-link :class="$style.container" to="/order" exact>
-    <ProgressBar />
-    <div :class="$style.nearestDelivery">
-      <div :class="$style.date">
-        <span :class="$style.month">Окт</span>
-        <span>28</span>
+  <div :class="$style.wrapper" @click="changeOrderID(order.id)">
+    <router-link :class="$style.container" to="/order" exact>
+      <ProgressBar :order="order" @getInputValue="nearestDelivery" />
+      <div :class="$style.nearestDelivery" v-if="this.delivery">
+        <div :class="$style.date">
+          <span :class="$style.month">{{ getMonth() }}</span>
+          <span>{{ getDay() }}</span>
+        </div>
+        <div :class="$style.delivery">
+          <span>Ближайшая доставка</span>
+          <span :class="$style.day">в {{ getDayOfWeek() }} -</span>
+          <span :class="$style.time">{{ getTime() }}</span>
+          <span :class="$style.place">{{ getAddress() }}</span>
+        </div>
       </div>
-      <div :class="$style.delivery">
-        <span>Ближайшая доставка</span>
-        <span :class="$style.day">в понедельник -</span>
-        <span :class="$style.time">с 10:00 до 12:00</span>
-        <span :class="$style.place">Работа на объекте в Басма...</span>
+      <div :class="$style.complitedDeliveries" v-else>
+        <h2 :class="$style.title">Все доставки выполнены</h2>
       </div>
-    </div>
-  </router-link>
+    </router-link>
+  </div>
 </template>
 
 <script>
 import ProgressBar from "@/components/common/ProgressBar";
 
+import { mapMutations } from "vuex";
+
 export default {
   components: {
     ProgressBar,
+  },
+
+  props: {
+    order: Object,
+  },
+
+  data() {
+    return {
+      months: [
+        "янв",
+        "фев",
+        "мар",
+        "апр",
+        "мая",
+        "июн",
+        "июл",
+        "авг",
+        "сен",
+        "окт",
+        "ноя",
+        "дек",
+      ],
+
+      days: [
+        "понедельник",
+        "вторник",
+        "среда",
+        "четверг",
+        "пятница",
+        "суббота",
+        "воскресенье",
+      ],
+
+      delivery: null,
+    };
+  },
+
+  methods: {
+    ...mapMutations(["changeOrderID"]),
+
+    nearestDelivery(value) {
+      const nearestDelivery = this.order.deliveries[value];
+      if (nearestDelivery === undefined) return;
+      this.delivery = Object.assign({}, nearestDelivery);
+    },
+
+    getDay() {
+      const day = this.delivery.date.slice(8, 10);
+      return day < 10 ? day.slice(1, 2) : day;
+    },
+
+    getMonth() {
+      const month = this.delivery.date.slice(5, 7);
+      return this.months[month];
+    },
+
+    getTime() {
+      return `с ${this.delivery.interval.replace("-", "до")}`;
+    },
+
+    getDayOfWeek() {
+      const day = new Date(this.delivery.date);
+      return `${this.days[day.getDay()]}`;
+    },
+
+    getAddress() {
+      return this.delivery.address;
+    },
   },
 };
 </script>
@@ -29,6 +104,10 @@ export default {
 <style lang="scss" module>
 @import "@/assets/styles/colors";
 @import "@/assets/styles/fonts";
+
+.wrapper {
+  width: 100%;
+}
 
 .container {
   display: block;
@@ -83,6 +162,14 @@ export default {
         color: $dark-gray;
       }
     }
+  }
+
+  .complitedDeliveries {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 3rem 0 0;
+    color: $blue;
   }
 }
 </style>

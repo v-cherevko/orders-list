@@ -1,16 +1,20 @@
 <template>
   <section :class="$style.container">
     <router-link :class="$style.link" to="/" exact>Назад</router-link>
-    <ProgressBar :class="$style.bar" />
+    <ProgressBar :class="$style.bar" :order="order" />
     <div :class="$style.deliveries">
       <h3 :class="$style.title">Доставки</h3>
-      <div :class="$style.order" v-for="order in 3" :key="order">
+      <div
+        :class="$style.order"
+        v-for="order in order.deliveries"
+        :key="order.id"
+      >
         <div :class="$style.wrapper">
           <img src="@/assets/icons/bag.svg" alt="bag" />
-          <span :class="$style.date">14 мая, среда</span>
+          <span :class="$style.date">{{ getDate(order.date) }}</span>
         </div>
         <div :class="$style.wrapper">
-          <span :class="$style.time">8:00-10:00</span>
+          <span :class="$style.time">{{ order.interval }}</span>
           <img src="@/assets/icons/arrow.svg" alt="arrow" />
         </div>
       </div>
@@ -34,6 +38,47 @@ export default {
   components: {
     ProgressBar,
     Button,
+  },
+
+  props: {
+    order: Object,
+  },
+
+  data() {
+    return {
+      months: [
+        "января",
+        "февраля",
+        "марта",
+        "апреля",
+        "мая",
+        "июня",
+        "июля",
+        "августа",
+        "сентября",
+        "октября",
+        "ноября",
+        "декабря",
+      ],
+
+      days: [
+        "понедельник",
+        "вторник",
+        "среда",
+        "четверг",
+        "пятница",
+        "суббота",
+        "воскресенье",
+      ],
+    };
+  },
+
+  methods: {
+    getDate(date) {
+      const day = new Date(date).getDay();
+      const result = date.split("-").reverse();
+      return `${result[0] < 10 ? result[0].substring(1, 2) : result[0]} ${this.months[result[1]]}, ${this.days[day]}`;
+    },
   },
 };
 </script>
@@ -68,12 +113,8 @@ export default {
       align-items: center;
       padding: 0.75rem 0;
 
-      &:nth-child(n) {
-        border-bottom: 1px solid $light-gray;
-      }
-
-      &:last-child {
-        border: none;
+      &:nth-child(n + 3) {
+        border-top: 1px solid $light-gray;
       }
 
       .wrapper {

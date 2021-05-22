@@ -1,19 +1,26 @@
 <template>
   <article :class="$style.container">
     <h2 :class="$style.title">
-      Мои заказы <span :class="$style.ordersCount">2</span>
+      Мои заказы <span :class="$style.ordersCount">{{ orders.length }}</span>
     </h2>
-    <OrderCard />
-    <OrderCard />
+    <OrderCard v-for="order in orders" :key="order.id" :order="order" />
   </article>
 </template>
 
 <script>
 import OrderCard from "@/components/order/OrderCard";
 
+import { mapGetters } from "vuex";
+
 export default {
   components: {
     OrderCard,
+  },
+
+  computed: {
+    ...mapGetters({
+      orders: "allOrders",
+    }),
   },
 };
 </script>
