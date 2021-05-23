@@ -1,10 +1,12 @@
 <template>
-  <article :class="$style.container">
-    <h2 :class="$style.title">
-      Мои заказы <span :class="$style.ordersCount">{{ orders.length }}</span>
-    </h2>
-    <OrderCard v-for="order in orders" :key="order.id" :order="order" />
-  </article>
+  <transition name="page" appear>
+    <article :class="$style.container">
+      <h2 :class="$style.title">
+        Мои заказы <span :class="$style.ordersCount">{{ orders.length }}</span>
+      </h2>
+      <OrderCard v-for="order in orders" :key="order.id" :order="order" />
+    </article>
+  </transition>
 </template>
 
 <script>
@@ -32,6 +34,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
   padding: 30px 18px;
 
   .title {

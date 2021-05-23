@@ -1,5 +1,5 @@
 <template>
-  <button :class="$style.button"><slot /></button>
+  <button :class="$style.button" @click="$emit('click')"><slot /></button>
 </template>
 
 <style lang="scss" module>
@@ -9,6 +9,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
   padding: 1rem;
   outline: none;
   border: none;

@@ -1,5 +1,5 @@
 <template>
-  <section :class="$style.container">
+  <section :class="$style.container" v-if="order">
     <router-link :class="$style.link" to="/" exact>Назад</router-link>
     <ProgressBar :class="$style.bar" :order="order" />
     <div :class="$style.deliveries">
@@ -19,12 +19,17 @@
         </div>
       </div>
       <div :class="$style.buttons">
-        <Button>
-          Дублировать заказ <img src="@/assets/icons/add.svg" alt="add" />
-        </Button>
-        <Button
-          >Отменить заказ <img src="@/assets/icons/basket.svg" alt="basket" />
-        </Button>
+        <router-link :class="$style.goBack" to="/" exact>
+          <Button @click="duplicateOrder(order)">
+            Дублировать заказ <img src="@/assets/icons/add.svg" alt="add" />
+          </Button>
+        </router-link>
+        <router-link :class="$style.goBack" to="/" exact>
+          <Button @click="cancelOrder(order.id)">
+            Отменить заказ
+            <img src="@/assets/icons/basket.svg" alt="basket" />
+          </Button>
+        </router-link>
       </div>
     </div>
   </section>
@@ -33,6 +38,8 @@
 <script>
 import ProgressBar from "@/components/common/ProgressBar";
 import Button from "@/components/basic/Button";
+
+import { mapActions } from "vuex";
 
 export default {
   components: {
@@ -74,10 +81,14 @@ export default {
   },
 
   methods: {
+    ...mapActions(["duplicateOrder", "cancelOrder"]),
+
     getDate(date) {
       const day = new Date(date).getDay();
       const result = date.split("-").reverse();
-      return `${result[0] < 10 ? result[0].substring(1, 2) : result[0]} ${this.months[result[1]]}, ${this.days[day]}`;
+      return `${result[0] < 10 ? result[0].substring(1, 2) : result[0]} ${
+        this.months[result[1]]
+      }, ${this.days[day]}`;
     },
   },
 };

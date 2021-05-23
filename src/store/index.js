@@ -83,6 +83,18 @@ export default new Vuex.Store({
     changeOrderID(state, orderID) {
       state.orderID = orderID;
     },
+
+    clearOrderID(state) {
+      state.orderID = "";
+    },
+
+    duplicate(state, order) {
+      state.orders.push(order);
+    },
+
+    deleteOrder(state, id) {
+      state.orders = state.orders.filter((order) => order.id !== id);
+    },
   },
 
   getters: {
@@ -92,6 +104,26 @@ export default new Vuex.Store({
 
     oneOrder(state) {
       return state.orders.filter((order) => order.id === state.orderID);
+    },
+  },
+
+  actions: {
+    cancelOrder({ commit }, id) {
+      setTimeout(() => {
+        commit("deleteOrder", id);
+        commit("clearOrderID");
+      }, 0);
+    },
+
+    duplicateOrder({ state, commit }, order) {
+      const duplicateOrder = Object.assign({}, order);
+      duplicateOrder.id = state.orders.length + 1;
+      state.orders.forEach((elem) => {
+        if (elem.id === duplicateOrder.id) {
+          duplicateOrder.id++;
+        }
+      });
+      commit("duplicate", duplicateOrder);
     },
   },
 });

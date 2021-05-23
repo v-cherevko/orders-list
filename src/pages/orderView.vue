@@ -1,7 +1,9 @@
 <template>
-  <section>
-    <OrderViewCard :order="getOrder[0]" />
-  </section>
+  <transition name="page" appear>
+    <section :class="$style.orderViewPage">
+      <OrderViewCard :order="getOrder[0]" />
+    </section>
+  </transition>
 </template>
 
 <script>
@@ -21,3 +23,9 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" module>
+.orderViewPage {
+  width: 100%;
+}
+</style>
