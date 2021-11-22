@@ -1,129 +1,60 @@
-import Vue from "vue";
-import Vuex from "vuex";
+import Vue from 'vue'
+import Vuex from 'vuex'
 
-Vue.use(Vuex);
+Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: () => ({
-    orders: [
-      {
-        id: 1,
-        packageName: "ULTRA рацион",
-        packageCalories: "9999 кКал",
-        deliveries: [
-          {
-            id: 1,
-            date: "2020-10-01",
-            interval: "8:00 - 10:00",
-            address: "Дом",
-          },
-          {
-            id: 2,
-            date: "2020-10-06",
-            interval: "8:00 - 10:00",
-            address: "Дом",
-          },
-          {
-            id: 3,
-            date: "2021-10-10",
-            interval: "8:00 - 10:00",
-            address: "Дом",
-          },
-        ],
-      },
-      {
-        id: 2,
-        packageName: "NORMAL рацион",
-        packageCalories: "1300 кКал",
-        deliveries: [
-          {
-            id: 4,
-            date: "2020-10-01",
-            interval: "8:00 - 10:00",
-            address: "Дом",
-          },
-          {
-            id: 5,
-            date: "2020-10-02",
-            interval: "8:00 - 10:00",
-            address: "Дом",
-          },
-          {
-            id: 6,
-            date: "2020-10-03",
-            interval: "8:00 - 10:00",
-            address: "Дом",
-          },
-          {
-            id: 7,
-            date: "2020-10-04",
-            interval: "6:00 - 10:00",
-            address: "Дом",
-          },
-          {
-            id: 8,
-            date: "2020-11-02",
-            interval: "7:00 - 10:00",
-            address: "Дом",
-          },
-          {
-            id: 9,
-            date: "2021-11-03",
-            interval: "8:00 - 10:00",
-            address: "Дом",
-          },
-        ],
-      },
-    ],
-
-    orderID: "",
+    orders: [],
+    orderView: ''
   }),
 
   mutations: {
-    changeOrderID(state, orderID) {
-      state.orderID = orderID;
+    setOrders(state, orders) {
+      state.orders = orders
+    },
+
+    changeOrderID(state, id) {
+      state.orderView = id
     },
 
     clearOrderID(state) {
-      state.orderID = "";
+      state.orderView = ''
     },
 
     duplicate(state, order) {
-      state.orders.push(order);
+      state.orders.push(order)
     },
 
     deleteOrder(state, id) {
-      state.orders = state.orders.filter((order) => order.id !== id);
-    },
+      state.orders = state.orders.filter(order => order.id !== id)
+    }
   },
 
   getters: {
     allOrders(state) {
-      return state.orders;
+      return state.orders
     },
 
-    oneOrder(state) {
-      return state.orders.filter((order) => order.id === state.orderID);
-    },
+    activeOrderView(state) {
+      return state.orders.find(order => order.id === state.orderView)
+    }
   },
 
   actions: {
-    cancelOrder({ commit }, id) {
-      setTimeout(() => {
-        commit("deleteOrder", id);
-        commit("clearOrderID");
-      }, 0);
+    async cancelOrder({ commit }, id) {
+      commit('deleteOrder', id)
+      commit('clearOrderID')
     },
 
     duplicateOrder({ state, commit }, order) {
-      const duplicateOrder = Object.assign({}, order);
-      duplicateOrder.id = state.orders.length + 1;
-      state.orders.forEach((elem) => {
+      const duplicateOrder = JSON.parse(JSON.stringify(order))
+      for (const elem of state.orders) {
         if (elem.id === duplicateOrder.id) {
-          duplicateOrder.id++;
+          duplicateOrder.id++
         }
-      });
-      commit("duplicate", duplicateOrder);
-    },
-  },
-});
+      }
+      commit('duplicate', duplicateOrder)
+    }
+  }
+})

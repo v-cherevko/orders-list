@@ -17,98 +17,85 @@
       :max="order.deliveries.length"
     />
     <div :class="$style.counterDays">
-      <span>{{ firstDelivery() }}</span>
-      <span :class="$style.daysLeft">Осталось {{ daysLeft() }}</span>
-      <span>{{ lastDelivery() }}</span>
+      <span>{{ firstDelivery }}</span>
+      <span :class="$style.daysLeft">
+        Осталось {{ validateDay(order.deliveries.length - inputValue) }}
+      </span>
+      <span>{{ lastDelivery }}</span>
     </div>
   </div>
 </template>
 
 <script>
+import { date } from '@/application/date'
+
 export default {
   props: {
-    order: Object,
+    order: Object
   },
 
   data() {
     return {
-      months: [
-        "янв",
-        "фев",
-        "мар",
-        "апр",
-        "мая",
-        "июн",
-        "июл",
-        "авг",
-        "сен",
-        "окт",
-        "ноя",
-        "дек",
-      ],
-      inputValue: 0,
-    };
+      inputValue: 0
+    }
+  },
+
+  computed: {
+    firstDelivery() {
+      const delivery = this.order.deliveries[0]
+      let day = delivery.date.slice(8, 10)
+      let month = new Date(delivery.date).getMonth()
+      return `${day < 10 ? day.slice(1, 2) : day} ${
+        date.shortMonths[month + 1]
+      }`
+    },
+
+    lastDelivery() {
+      const delivery = this.order.deliveries[this.order.deliveries.length - 1]
+      let day = delivery.date.slice(8, 10)
+      let month = new Date(delivery.date).getMonth()
+      return `${day < 10 ? day.slice(1, 2) : day} ${
+        date.shortMonths[month + 1]
+      }`
+    }
   },
 
   methods: {
     getInputValue() {
-      this.$emit("getInputValue", this.inputValue);
+      this.$emit('getInputValue', this.inputValue)
     },
 
     countCompletedDeliveries() {
-      const deliveries = this.order.deliveries;
-      const dateNow = new Date();
-      let count = 0;
-      let day;
+      const dateNow = new Date()
+      let count = 0
 
-      deliveries.forEach((elem) => {
-        const date = new Date(elem.date);
+      this.order.deliveries.forEach((elem) => {
+        const date = new Date(elem.date)
         if (date <= dateNow) {
-          count++;
+          count++
         }
-      });
+      })
 
-      this.inputValue = count;
+      this.inputValue = count
 
-      if (count === 1) day = "день";
-      if (count > 1 && count < 5) day = "дня";
-      if (count === 0 || count >= 5) day = "дней";
-
-      return `${count} ${day}`;
+      return this.validateDay(count)
     },
 
-    firstDelivery() {
-      const delivery = this.order.deliveries[0];
-      let day = delivery.date.slice(8, 10);
-      let month = new Date(delivery.date).getMonth();
-      return `${day < 10 ? day.slice(1, 2) : day} ${this.months[month + 1]}`;
-    },
-
-    lastDelivery() {
-      const delivery = this.order.deliveries[this.order.deliveries.length - 1];
-      let day = delivery.date.slice(8, 10);
-      let month = new Date(delivery.date).getMonth();
-      return `${day < 10 ? day.slice(1, 2) : day} ${this.months[month + 1]}`;
-    },
-
-    daysLeft() {
-      const num = this.order.deliveries.length - this.inputValue;
-      let day;
-      if (num === 1) day = "день";
-      if (num > 1 && num < 5) day = "дня";
-      if (num === 0 || num >= 5) day = "дней";
-      return `${num} ${day}`;
-    },
+    validateDay(num) {
+      if (num === 1) return `${num} день`
+      if (num > 1 && num < 5) return `${num} дня`
+      if (num === 0 || num >= 5) return `${num} дней`
+    }
   },
 
   mounted() {
-    this.getInputValue();
-  },
-};
+    this.getInputValue()
+  }
+}
 </script>
 
 <style lang="scss" module>
-@import "@/assets/styles/fonts";
+@import '@/assets/styles/fonts';
 
 .progressBar {
   .flexWrapper {

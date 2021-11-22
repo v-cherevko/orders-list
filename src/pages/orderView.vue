@@ -1,27 +1,25 @@
 <template>
   <transition name="page" appear>
     <section :class="$style.orderViewPage">
-      <OrderViewCard :order="getOrder[0]" />
+      <OrderViewCard :order="activeOrderView" />
     </section>
   </transition>
 </template>
 
 <script>
-import OrderViewCard from "@/components/order/OrderViewCard";
+import OrderViewCard from '@/components/order/OrderViewCard'
 
-import { mapGetters } from "vuex";
+import { mapGetters } from 'vuex'
 
 export default {
   components: {
-    OrderViewCard,
+    OrderViewCard
   },
 
   computed: {
-    ...mapGetters({
-      getOrder: "oneOrder",
-    }),
-  },
-};
+    ...mapGetters(['activeOrderView'])
+  }
+}
 </script>
 
 <style lang="scss" module>

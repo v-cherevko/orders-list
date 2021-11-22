@@ -4,14 +4,14 @@
       <ProgressBar :order="order" @getInputValue="nearestDelivery" />
       <div :class="$style.nearestDelivery" v-if="this.delivery">
         <div :class="$style.date">
-          <span :class="$style.month">{{ getMonth() }}</span>
-          <span>{{ getDay() }}</span>
+          <span :class="$style.month">{{ getMonth }}</span>
+          <span>{{ getDay }}</span>
         </div>
         <div :class="$style.delivery">
           <span>Ближайшая доставка</span>
-          <span :class="$style.day">в {{ getDayOfWeek() }} -</span>
-          <span :class="$style.time">{{ getTime() }}</span>
-          <span :class="$style.place">{{ getAddress() }}</span>
+          <span :class="$style.day">в {{ getDayOfWeek }} -</span>
+          <span :class="$style.time">{{ getTime }}</span>
+          <span :class="$style.place">{{ getAddress }}</span>
         </div>
       </div>
       <div :class="$style.complitedDeliveries" v-else>
@@ -22,88 +22,67 @@
 </template>
 
 <script>
-import ProgressBar from "@/components/common/ProgressBar";
+import ProgressBar from '@/components/common/ProgressBar'
 
-import { mapMutations } from "vuex";
+import { date } from '@/application/date'
+
+import { mapMutations } from 'vuex'
 
 export default {
   components: {
-    ProgressBar,
+    ProgressBar
   },
 
   props: {
-    order: Object,
+    order: Object
   },
 
   data() {
     return {
-      months: [
-        "янв",
-        "фев",
-        "мар",
-        "апр",
-        "мая",
-        "июн",
-        "июл",
-        "авг",
-        "сен",
-        "окт",
-        "ноя",
-        "дек",
-      ],
-
-      days: [
-        "понедельник",
-        "вторник",
-        "среда",
-        "четверг",
-        "пятница",
-        "суббота",
-        "воскресенье",
-      ],
-
-      delivery: null,
-    };
+      delivery: null
+    }
   },
 
-  methods: {
-    ...mapMutations(["changeOrderID"]),
-
-    nearestDelivery(value) {
-      const nearestDelivery = this.order.deliveries[value];
-      if (nearestDelivery === undefined) return;
-      this.delivery = Object.assign({}, nearestDelivery);
+  computed: {
+    getTime() {
+      return `с ${this.delivery.interval.replace('-', 'до')}`
     },
 
     getDay() {
-      const day = this.delivery.date.slice(8, 10);
-      return day < 10 ? day.slice(1, 2) : day;
+      const day = this.delivery.date.slice(8, 10)
+      return day < 10 ? day.slice(1, 2) : day
     },
 
     getMonth() {
-      const month = this.delivery.date.slice(5, 7);
-      return this.months[month];
-    },
-
-    getTime() {
-      return `с ${this.delivery.interval.replace("-", "до")}`;
+      const month = this.delivery.date.slice(5, 7)
+      return date.shortMonths[month]
     },
 
     getDayOfWeek() {
-      const day = new Date(this.delivery.date);
-      return `${this.days[day.getDay()]}`;
+      const day = new Date(this.delivery.date)
+      return `${date.days[day.getDay()]}`
     },
 
     getAddress() {
-      return this.delivery.address;
-    },
+      return this.delivery.address
+    }
   },
-};
+
+  methods: {
+    ...mapMutations(['changeOrderID']),
+
+    nearestDelivery(value) {
+      const nearestDelivery = this.order.deliveries[value]
+      if (nearestDelivery === undefined) return
+      this.delivery = JSON.parse(JSON.stringify(nearestDelivery))
+    }
+  }
+}
 </script>
 
 <style lang="scss" module>
-@import "@/assets/styles/colors";
-@import "@/assets/styles/fonts";
+@import '@/assets/styles/colors';
+@import '@/assets/styles/fonts';
 
 .wrapper {
   width: 100%;

@@ -36,66 +36,39 @@
 </template>
 
 <script>
-import ProgressBar from "@/components/common/ProgressBar";
-import Button from "@/components/basic/Button";
+import ProgressBar from '@/components/common/ProgressBar'
+import Button from '@/components/basic/Button'
 
-import { mapActions } from "vuex";
+import { date } from '@/application/date'
+
+import { mapActions } from 'vuex'
 
 export default {
   components: {
     ProgressBar,
-    Button,
+    Button
   },
 
   props: {
-    order: Object,
-  },
-
-  data() {
-    return {
-      months: [
-        "января",
-        "февраля",
-        "марта",
-        "апреля",
-        "мая",
-        "июня",
-        "июля",
-        "августа",
-        "сентября",
-        "октября",
-        "ноября",
-        "декабря",
-      ],
-
-      days: [
-        "понедельник",
-        "вторник",
-        "среда",
-        "четверг",
-        "пятница",
-        "суббота",
-        "воскресенье",
-      ],
-    };
+    order: Object
   },
 
   methods: {
-    ...mapActions(["duplicateOrder", "cancelOrder"]),
+    ...mapActions(['duplicateOrder', 'cancelOrder']),
 
-    getDate(date) {
-      const day = new Date(date).getDay();
-      const result = date.split("-").reverse();
+    getDate(value) {
+      const day = new Date(value).getDay()
+      const result = value.split('-').reverse()
       return `${result[0] < 10 ? result[0].substring(1, 2) : result[0]} ${
-        this.months[result[1]]
-      }, ${this.days[day]}`;
-    },
-  },
-};
+        date.longMonths[result[1]]
+      }, ${date.days[day]}`
+    }
+  }
+}
 </script>
 
 <style lang="scss" module>
-@import "@/assets/styles/fonts";
+@import '@/assets/styles/fonts';
 
 .container {
   padding: 1.875rem 0;

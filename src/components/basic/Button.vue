@@ -3,7 +3,7 @@
 </template>
 
 <style lang="scss" module>
-@import "@/assets/styles/fonts";
+@import '@/assets/styles/fonts';
 
 .button {
   display: flex;
